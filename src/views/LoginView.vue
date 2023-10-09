@@ -1,6 +1,24 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+
+const authStore = useAuthStore();
+
+const form = ref({
+  email: "",
+  password: "",
+});
+
+async function onLogin() {
+  
+  try {
+    await authStore.logIn(form.value)
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
 
 <template>
@@ -15,12 +33,13 @@ import { RouterLink } from "vue-router";
           >
             Zaloguj się
           </h1>
-          <form class="space-y-4 md:space-y-6" action="#">
+          <form @submit.prevent="onLogin" class="space-y-4 md:space-y-6" action="#">
             <div>
               <label for="email" class="block mb-2 text-sm font-medium text-gray-900">
                 Email
               </label>
               <input
+                v-model="form.email"
                 type="email"
                 name="email"
                 id="email"
@@ -34,6 +53,7 @@ import { RouterLink } from "vue-router";
                 Hasło
               </label>
               <input
+                v-model="form.password"
                 type="password"
                 name="password"
                 id="password"
@@ -41,22 +61,6 @@ import { RouterLink } from "vue-router";
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5"
                 required="true"
               />
-            </div>
-            <div class="flex items-center justify-between">
-              <div class="flex items-start">
-                <div class="flex items-center h-5">
-                  <input
-                    id="remember"
-                    aria-describedby="remember"
-                    type="checkbox"
-                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300"
-                    required="true"
-                  />
-                </div>
-                <div class="ml-3 text-sm">
-                  <label for="remember" class="text-gray-500"> Zapamiętaj mnie </label>
-                </div>
-              </div>
             </div>
             <button
               type="submit"

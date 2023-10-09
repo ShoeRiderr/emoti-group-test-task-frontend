@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { RouterLink } from "vue-router";
 import { ref } from "vue";
-import { useAuthStore } from "@/stores/auth.ts";
+import { useAuthStore } from "@/stores/auth";
 import Auth from "@/components/Navbar/Auth.vue";
 import Guest from "@/components/Navbar/Guest.vue";
 
