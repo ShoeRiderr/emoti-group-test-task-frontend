@@ -1,4 +1,5 @@
-<script setup>
+<!-- eslint-disable vue/multi-word-component-names -->
+<script setup lang="ts">
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 
@@ -11,7 +12,7 @@ const currYear = ref(new Date().getFullYear());
       © {{ currYear }} Copyright:
       <RouterLink
         class="text-neutral-800 dark:text-neutral-400"
-        :to="{ name: 'vacancies' }"
+        :to="{ name: 'dashboard' }"
       >
         Emoti group task
       </RouterLink>

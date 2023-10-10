@@ -2,41 +2,52 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import { useAuthStore } from '@/stores/auth'
+import { getUser } from './api/users'
 import './assets/main.css'
-import cors from 'cors';
+
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
-app.use(cors);
 app.mount('#app')
 
-import { useAuthStore } from "@/stores/auth";
-import { getUser } from './api/users'
-
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 router.beforeEach(async (to, from, next) => {
+  const userToken = localStorage.getItem('userToken')
+  const userId = localStorage.getItem('userId')
+  const isUnauthenticated =
+    userToken == null || userToken.length === 0 || userId == null || userId.length === 0
+  let user = null
+  if (!isUnauthenticated) {
+    user = await (await getUser(+userId)).data
+
+    authStore.isLoggedIn = true
+    authStore.user = user
+  }
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const userToken = localStorage.getItem("userToken");
-    const userId = localStorage.getItem("userId");
-    if (userToken == null || userToken.length === 0 || userId == null || userId.length === 0) {
+    if (isUnauthenticated) {
       next({
-        name: "login"
-      });
+        name: 'login'
+      })
     } else {
-      const user = await (await getUser(+userId)).data
       if (!user) {
         next({
-          name: "login"
-        });
+          name: 'login'
+        })
       } else {
-        authStore.isLoggedIn = true;
-        authStore.user = user;
-        next();
+        next()
       }
     }
   } else {
-    next();
+    if ((to.name == 'login' || to.name == 'register') && user) {
+      next({
+        name: 'vacancies'
+      })
+    }
+
+    next()
   }
-});
+})

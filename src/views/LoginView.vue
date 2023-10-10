@@ -3,6 +3,9 @@
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const authStore = useAuthStore();
 
@@ -12,9 +15,12 @@ const form = ref({
 });
 
 async function onLogin() {
-  
   try {
-    await authStore.logIn(form.value)
+    await authStore.logIn(form.value);
+
+    await router.push({
+      name: "vacancies",
+    });
   } catch (error) {
     console.log(error);
   }

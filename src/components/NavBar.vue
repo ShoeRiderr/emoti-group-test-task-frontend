@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { RouterLink } from "vue-router";
-import { ref } from "vue";
-import { useAuthStore } from "@/stores/auth";
+import { ref, computed } from "vue";
 import Auth from "@/components/Navbar/Auth.vue";
 import Guest from "@/components/Navbar/Guest.vue";
+import { useAuthStore } from "@/stores/auth";
 
 const authStore = useAuthStore();
 
 const showMobileMenu = ref(false);
-
+const isLoggedIn = computed(() => authStore.isLoggedIn);
 function toggleMenu() {
   showMobileMenu.value = !showMobileMenu.value;
 }
@@ -48,11 +48,7 @@ function toggleMenu() {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
-            <!--
-            Icon when menu is open.
 
-            Menu open: "block", Menu closed: "hidden"
-          -->
             <svg
               class="hidden h-6 w-6"
               fill="none"
@@ -72,19 +68,25 @@ function toggleMenu() {
         <div
           class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
         >
-          <RouterLink :to="{ name: 'vacancies' }" class="flex flex-shrink-0 items-center">
-            <img class="h-8 w-auto" src="@/assets/images/task.png" alt="Your Company" />
+          <RouterLink :to="{ name: 'dashboard' }" class="flex flex-shrink-0 items-center">
+            <img class="h-8 w-auto" src="@/assets/images/task.png" alt="Strona główna" />
           </RouterLink>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              
+              <div v-if="isLoggedIn">
+                <RouterLink
+                  :to="{ name: 'vacancies' }"
+                  class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >
+                  Zarezerwuj wizytę
+                </RouterLink>
+              </div>
             </div>
           </div>
         </div>
 
-        <Guest v-if="true" />
-        <Auth v-if="false" />
+        <Auth v-if="isLoggedIn" />
+        <Guest v-else />
       </div>
     </div>
 
@@ -93,12 +95,19 @@ function toggleMenu() {
       <div class="space-y-1 px-2 pb-3 pt-2">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
         <RouterLink
-          :to="{ name: 'vacancies' }"
+          :to="{ name: 'dashboard' }"
           class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
-          aria-current="page"
         >
-          Dashboard
+          Strona główna
         </RouterLink>
+        <div v-if="isLoggedIn">
+          <RouterLink
+            :to="{ name: 'vacancies' }"
+            class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
+          >
+            Zarezerwuj wizytę
+          </RouterLink>
+        </div>
       </div>
     </div>
   </nav>

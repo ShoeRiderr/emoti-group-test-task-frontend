@@ -10,10 +10,10 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logIn(payload: LoginPayload) {
     try {
-      user.value = await (await login(payload)).data;
+      user.value = await (await login(payload)).data
 
-      localStorage.setItem('userId', user.value.id?.toString() ?? '');
-      localStorage.setItem('userToken', user.value.token ?? '');
+      localStorage.setItem('userId', user.value.id?.toString() ?? '')
+      localStorage.setItem('userToken', user.value.token ?? '')
 
       isLoggedIn.value = true
     } catch (error) {
@@ -24,14 +24,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logOut() {
     try {
-      await logout();
+      await logout()
 
-      localStorage.setItem('userId', '');
-      localStorage.setItem('userToken', '');
-      user.value = {};
+      localStorage.setItem('userId', '')
+      localStorage.setItem('userToken', '')
+
+      user.value = {}
       isLoggedIn.value = false
     } catch (error) {
-      console.log(error)
       isLoggedIn.value = true
     }
   }
