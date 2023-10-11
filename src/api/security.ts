@@ -1,12 +1,10 @@
-import axios from 'axios';
+import { axiosInstance } from './axiosDefaults';
 import type { LoginPayload } from '@/interfaces/api/SecurityInterfaces';
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
 export async function login(params:LoginPayload) {
-    return axios.post(`${apiUrl}/login`, params);
+    return axiosInstance.post(`/login`, params);
 }
 
 export async function logout() {
-    return axios.post(`${apiUrl}/logout`);
+    return axiosInstance.post(`/logout`);
 }

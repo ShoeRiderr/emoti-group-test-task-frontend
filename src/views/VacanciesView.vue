@@ -1,24 +1,52 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import VacancyList from "@/components/Vacancies/VacancyList.vue";
-import {fetchVacancies} from '@/api/vacancies'
+import { useVacancyStore } from "@/stores/vacancy";
+import { useReservationStore } from "@/stores/reservation";
+import type { VacancyFilterPayload } from "@/interfaces/api/VacancyFilterPayload";
+import VacancyCalendar from '@/components/Vacancies/VacancyCalendar.vue'
 
-const filterForm = ref({
-  dateFrom: "",
-  dateTo: "",
+const filterForm = ref<VacancyFilterPayload>({
+  startDate: "",
+  endDate: "",
   free: 1,
 });
-const vacancies = ref([]);
 
-const hasVacancies = computed(() => vacancies.value.length > 0);
+const vacancyStore = useVacancyStore();
+const reservationStore = useReservationStore();
+
+const vacancies = computed(() => vacancyStore.vacancies);
+const totalPrice = computed(() => vacancyStore.totalPrice);
+const hasVacancies = computed(
+  () =>
+    vacancies.value?.["hydra:member"]?.length &&
+    vacancies.value?.["hydra:member"]?.length > 0
+);
+
+const reservationErrors = computed(() => reservationStore.errors);
+const hasReservationErrors = computed(() => reservationErrors.value.length > 0);
+
 async function searchVacancies() {
-  try {
-    const response = await fetchVacancies(filterForm.value);
+  await vacancyStore.fetchAll(filterForm.value);
+}
 
-    console.log(response);
-  } catch (error) {
-    console.log(error);
+async function onReservate() {
+  await reservationStore.reservate(filterForm.value);
+
+  if (!hasReservationErrors.value) {
+    cancel();
   }
+}
+
+function cancel() {
+  filterForm.value = {
+    startDate: "",
+    endDate: "",
+    free: 1,
+  };
+
+  vacancyStore.totalPrice = 0;
+
+  vacancyStore.vacancies = undefined;
 }
 </script>
 <template>
@@ -28,11 +56,11 @@ async function searchVacancies() {
       <form @submit.prevent="searchVacancies">
         <div>
           <label for="">Od</label>
-          <input v-model="filterForm.dateFrom" type="date" required="true" />
+          <input v-model="filterForm.startDate" type="date" required="true" />
         </div>
         <div>
           <label for="">Do</label>
-          <input v-model="filterForm.dateTo" type="date" required="true" />
+          <input v-model="filterForm.endDate" type="date" required="true" />
         </div>
         <div>
           <label for="">Ilość miejsc</label>
@@ -42,9 +70,15 @@ async function searchVacancies() {
       </form>
     </div>
     <!-- Filtered vacancies -->
-    <div v-if="hasVacancies">
-      <VacancyList v-for="(vacancy, key) in vacancies" :key="key" :vacancy="vacancy" />
+    <div>
+      <div v-if="hasVacancies">
+        Kwota do zapłaty: {{ totalPrice }}
+        <button @click.prevent="onReservate">Rezerwuj</button>
+        <button @click.prevent="cancel">Anuluj</button>
+      </div>
+      <div v-else>Brak wolnych miejsc w podanym przedziale dat.</div>
     </div>
-    <div v-else>Brak wolnych miejsc w podanym przedziale dat.</div>
+    <!-- Calendar -->
+    <VacancyCalendar />
   </div>
 </template>

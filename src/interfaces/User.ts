@@ -1,6 +1,13 @@
+import type { ReservationCollection } from "./Reservation"
+
 export interface User {
-    id?: Number;
-    email?: string;
-    name?: string;
-    token?: string;
+  '@context'?: string
+  '@id'?: string
+  '@type'?: string
+  id: Number
+  name: string
+  email: string
+  token?: string
+  roles: Array<string>
+  reservations?: ReservationCollection
 }

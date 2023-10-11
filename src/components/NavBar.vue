@@ -9,6 +9,8 @@ const authStore = useAuthStore();
 
 const showMobileMenu = ref(false);
 const isLoggedIn = computed(() => authStore.isLoggedIn);
+const isAdmin = computed(() => authStore.isAdmin);
+
 function toggleMenu() {
   showMobileMenu.value = !showMobileMenu.value;
 }
@@ -81,6 +83,14 @@ function toggleMenu() {
                   Zarezerwuj wizytę
                 </RouterLink>
               </div>
+              <div v-if="isAdmin">
+                <RouterLink
+                  :to="{ name: 'reservations' }"
+                  class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >
+                  Lista rezerwacji
+                </RouterLink>
+              </div>
             </div>
           </div>
         </div>
@@ -107,6 +117,14 @@ function toggleMenu() {
           >
             Zarezerwuj wizytę
           </RouterLink>
+          <div v-if="isAdmin">
+            <RouterLink
+              :to="{ name: 'reservations' }"
+              class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
+            >
+              Lista rezerwacji
+            </RouterLink>
+          </div>
         </div>
       </div>
     </div>

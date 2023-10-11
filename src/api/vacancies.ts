@@ -1,10 +1,13 @@
-import axios from 'axios';
-import type { VacancyFilterPayload } from '@/interfaces/api/VacancyFilterPayload';
+import type { VacancyFilterPayload } from '@/interfaces/api/VacancyFilterPayload'
+import { axiosInstance } from './axiosDefaults'
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL
 
-export async function fetchVacancies(params:VacancyFilterPayload) {
-    return axios.get(`${apiUrl}/api/vacancies`, {
-        params: params
-    })
+export async function fetchVacancies(params: VacancyFilterPayload, apiToken: string) {
+  return axiosInstance.get(`/api/vacancies`, {
+    params: params,
+    headers: {
+      'X-API-TOKEN': apiToken
+    }
+  })
 }

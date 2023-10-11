@@ -1,16 +1,17 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import { vOnClickOutside  } from '@vueuse/components';
 
 const router = useRouter();
 
 const authStore = useAuthStore();
 
-const showUserMenu = ref(false);
+const user = computed(() => authStore.user)
 
-const user = authStore.user;
+const showUserMenu = ref(false);
 
 async function logout() {
   try {
@@ -20,13 +21,18 @@ async function logout() {
       name: "login",
     });
   } catch (error) {
-    console.log(error);
+    authStore.errors = error
   }
 }
 
 function toggleUserMenu() {
   showUserMenu.value = !showUserMenu.value;
 }
+
+function closeUserMenu() {
+  showUserMenu.value = false;
+}
+
 </script>
 
 <template>
@@ -39,6 +45,7 @@ function toggleUserMenu() {
       <div>
         <button
           @click="toggleUserMenu"
+          v-on-click-outside="closeUserMenu"
           type="button"
           class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
           id="user-menu-button"
@@ -60,13 +67,13 @@ function toggleUserMenu() {
         tabindex="-1"
       >
         <RouterLink
-          :to="{ name: 'user', params: { id: user.id } }"
+          :to="{ name: 'user', params: { id: user?.id} }"
           class="block px-4 py-2 text-sm text-gray-700"
           role="menuitem"
           tabindex="-1"
           id="user-menu-item-0"
         >
-          Your Profile
+          Twój Profil
         </RouterLink>
         <a
           href="#"

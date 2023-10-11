@@ -17,6 +17,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/reservations',
+      name: 'reservations',
+      component: import('@/views/ReservationView.vue'),
+      meta: {
+        requiresAuth: true,
+        onlyAdmin: true
+      }
+    },
+    {
       path: '/login',
       name: 'login',
       // route level code-splitting
@@ -49,8 +58,8 @@ const router = createRouter({
           component: import('@/views/User/ProfileView.vue')
         },
         {
-          path: 'saved-runs',
-          name: 'user-saved-runs',
+          path: 'reservations',
+          name: 'user-reservations',
           component: import('@/views/User/ReservationsView.vue')
         }
       ]

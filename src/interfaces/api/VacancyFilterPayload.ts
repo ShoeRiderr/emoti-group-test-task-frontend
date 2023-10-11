@@ -1,5 +1,5 @@
-export interface VacancyFilterPayload {
-    dateFrom: string;
-    dateTo: string;
+import type { DateRange } from "./DateRangeInterface";
+
+export interface VacancyFilterPayload extends DateRange {
     free: Number;
 }

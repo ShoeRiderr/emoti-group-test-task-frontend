@@ -1,16 +1,16 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useAuthStore } from "@/stores/auth";
+
+const authStore = useAuthStore();
+const user = computed(() => authStore.user);
+</script>
+
 <template>
-    <div class="about">
-      <h1>This is an profile page</h1>
-    </div>
-  </template>
-  
-  <style>
-  @media (min-width: 1024px) {
-    .about {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-    }
-  }
-  </style>
-  
+  <div>
+    {{ user?.id }}
+    {{ user?.name }}
+    {{ user?.email }}
+    {{ user?.roles }}
+  </div>
+</template>

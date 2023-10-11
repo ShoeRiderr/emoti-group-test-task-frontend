@@ -20,34 +20,53 @@ router.beforeEach(async (to, from, next) => {
   const isUnauthenticated =
     userToken == null || userToken.length === 0 || userId == null || userId.length === 0
   let user = null
+
   if (!isUnauthenticated) {
-    user = await (await getUser(+userId)).data
+    user = await (await getUser(+userId, userToken)).data
 
     authStore.isLoggedIn = true
     authStore.user = user
   }
 
+  // Check if endpoint requires authorization
   if (to.matched.some((record) => record.meta.requiresAuth)) {
+    // Check if user is authenticated. If not, redirect to login page.
     if (isUnauthenticated) {
       next({
         name: 'login'
       })
     } else {
+      // If storage variable says that user is logged in but can't find any user with sended api token
+      // then redirect to login page
       if (!user) {
         next({
           name: 'login'
         })
       } else {
+        // Check if user requires admin privileges to visit the page.
+        if (to.matched.some((record) => record.meta.onlyAdmin)) {
+          // If user is not admin, redirect to dashboard page
+          if (!authStore.isAdmin) {
+            next({
+              name: 'dashboard'
+            })
+          }
+        }
+
+        // If every above conditions were not true then process the request
         next()
       }
     }
   } else {
+    // Check if logged in user try to visit login or register page
     if ((to.name == 'login' || to.name == 'register') && user) {
+      // If the condition is true then redirect user to dashboard
       next({
-        name: 'vacancies'
+        name: 'dashboard'
       })
     }
 
+    // If every above conditions were not true then process the request
     next()
   }
 })

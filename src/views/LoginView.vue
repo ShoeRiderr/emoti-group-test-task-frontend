@@ -22,7 +22,7 @@ async function onLogin() {
       name: "vacancies",
     });
   } catch (error) {
-    console.log(error);
+    authStore.errors = error;
   }
 }
 </script>
