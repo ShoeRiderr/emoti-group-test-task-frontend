@@ -27,6 +27,8 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 npm install
 ```
 
+Application is frontend part for [backend](https://github.com/ShoeRiderr/emoti-group-test-task). Before running this application you should first download and start backend and visit it in the browser by accepting the risk of going to unprotected site (when you run app locally). 
+
 ### Compile and Hot-Reload for Development
 
 ```sh
