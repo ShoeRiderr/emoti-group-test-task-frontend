@@ -1,8 +1,7 @@
 import RegisterView from './RegisterView.vue'
+import '@/assets/main.css'
 
-describe('<RegisterView />', () => {
   it('renders', () => {
     // see: https://on.cypress.io/mounting-vue
     cy.mount(RegisterView)
   })
-})
