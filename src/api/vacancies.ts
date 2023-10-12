@@ -7,7 +7,8 @@ export async function fetchVacancies(params: VacancyFilterPayload, apiToken: str
   return axiosInstance.get(`/api/vacancies`, {
     params: params,
     headers: {
-      'X-API-TOKEN': apiToken
+      'X-API-TOKEN': apiToken,
+      'Content-Type': 'application/ld+json'
     }
   })
 }

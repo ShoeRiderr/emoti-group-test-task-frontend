@@ -14,7 +14,7 @@ export const useReservationStore = defineStore('reservation', () => {
 
   const authStore = useAuthStore();
 
-  const apiToken = computed(() => authStore.userToken ?? userToken);
+  const apiToken = computed(() => (authStore.userToken === '' ? authStore.userToken : userToken))
 
   async function getAllReservations(): Promise<void> {
     try {

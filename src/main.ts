@@ -4,9 +4,11 @@ import App from './App.vue'
 import router from './router'
 import { useAuthStore } from '@/stores/auth'
 import { getUser } from './api/users'
+import { setupCalendar } from 'v-calendar';
 import './assets/main.css'
 
 const app = createApp(App)
+app.use(setupCalendar, {})
 app.use(createPinia())
 app.use(router)
 
@@ -26,6 +28,7 @@ router.beforeEach(async (to, from, next) => {
 
     authStore.isLoggedIn = true
     authStore.user = user
+    authStore.userToken = userToken
   }
 
   // Check if endpoint requires authorization
