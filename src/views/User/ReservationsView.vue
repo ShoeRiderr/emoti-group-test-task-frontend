@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import ReservationItem from "@/components/Reservations/ReservationItem.vue";
+import ReservationTable from "@/components/Reservations/ReservationTable.vue";
 
 const authStore = useAuthStore();
 
@@ -10,10 +10,6 @@ const reservations = computed(() => authStore.user?.reservations);
 
 <template>
   <div>
-    <ReservationItem
-      v-for="(reservation, key) in reservations"
-      :key="key"
-      :reservation="reservation"
-    />
+    <ReservationTable :reservations="reservations" />
   </div>
 </template>

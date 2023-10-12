@@ -1,11 +1,33 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch, defineEmits, defineProps } from "vue";
 import { useScreens } from "vue-screen-utils";
-import { Calendar } from "v-calendar";
+import { DatePicker } from "v-calendar";
 import { useVacancyStore } from "@/stores/vacancy";
 import "v-calendar/style.css";
 
+const props = defineProps(["filterRange"]);
+
+const emit = defineEmits(["range"]);
 const vacancyStore = useVacancyStore();
+
+const range = ref({
+  start: "",
+  end: "",
+});
+
+watch(range, async (newRange, oldRange) => {
+  if (newRange !== oldRange) {
+    emit("range", newRange);
+  }
+});
+
+watch(
+  () => props.filterRange,
+  (newValue) => {
+    range.value = newValue;
+  },
+  { deep: true }
+);
 
 onMounted(async () => {
   await vacancyStore.fetchAll({
@@ -25,6 +47,7 @@ const { mapCurrent } = useScreens({
   xl: "1280px",
   "2xl": "1536px",
 });
+
 const columns = mapCurrent({ "2xl": 2 }, 1);
 const expanded = mapCurrent({ "2xl": false }, true);
 
@@ -46,13 +69,12 @@ const attributes = computed(() => {
 </script>
 
 <template>
-  <div>
-    <Calendar
-      style="width: 100%"
-      :columns="columns"
-      :expanded="expanded"
-      :attributes="attributes"
-      :min-date="new Date()"
-    />
-  </div>
+  <DatePicker
+    v-model.range="range"
+    style="width: 100%"
+    :columns="columns"
+    :expanded="expanded"
+    :attributes="attributes"
+    :min-date="new Date()"
+  />
 </template>

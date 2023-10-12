@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useVacancyStore } from "@/stores/vacancy";
 import { useReservationStore } from "@/stores/reservation";
 import type { VacancyFilterPayload } from "@/interfaces/api/VacancyFilterPayload";
 import VacancyCalendar from "@/components/Vacancies/VacancyCalendar.vue";
 import { formatDate } from "@/utils/dateUtil";
+
+let today = formatDate();
 
 const vacancyStore = useVacancyStore();
 const reservationStore = useReservationStore();
@@ -17,10 +19,21 @@ const filterForm = ref<VacancyFilterPayload>({
 
 onMounted(async () => {
   // set minimum value on today for start date
-  let today = await formatDate();
-
   document.getElementById("startDate").setAttribute("min", today);
+  document.getElementById("endDate").setAttribute("min", today);
 });
+
+watch(
+  () => filterForm,
+  (newFilter) => {
+    const { startDate } = newFilter.value;
+
+    if (startDate && startDate.length > 0) {
+      document.getElementById("endDate").setAttribute("min", startDate);
+    }
+  },
+  { deep: true }
+);
 
 //> Computed
 const filteredVacancies = computed(() => vacancyStore.filteredVacancies);
@@ -34,6 +47,15 @@ const hasFilteredVacancies = computed(
 const reservationErrors = computed(() => reservationStore.errors);
 
 const hasReservationErrors = computed(() => reservationErrors.value.length > 0);
+
+const formatedFilterRange = computed(() => {
+  const { startDate, endDate } = filterForm.value;
+
+  return {
+    start: startDate.length === 0 ? "" : new Date(startDate),
+    end: endDate.length === 0 ? "" : new Date(endDate),
+  };
+});
 //< Computed
 
 async function searchVacancies() {
@@ -64,6 +86,11 @@ function cancel() {
   vacancyStore.totalPrice = 0;
 
   vacancyStore.filteredVacancies = undefined;
+}
+
+function onCalendarDateRangeChange(range) {
+  filterForm.value.startDate = formatDate(new Date(range.start));
+  filterForm.value.endDate = formatDate(new Date(range.end));
 }
 </script>
 
@@ -145,7 +172,12 @@ function cancel() {
         </div>
       </div>
       <!-- Calendar -->
-      <VacancyCalendar class="flex-initial lg:w-4/5 w-full lg:mt-0" />
+      <div class="flex-initial lg:w-4/5 w-full lg:mt-0">
+        <VacancyCalendar
+          :filter-range="formatedFilterRange"
+          @range="onCalendarDateRangeChange"
+        />
+      </div>
     </div>
   </div>
 </template>

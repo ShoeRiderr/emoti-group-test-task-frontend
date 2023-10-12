@@ -4,13 +4,22 @@ import { useAuthStore } from "@/stores/auth";
 
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
+const isAdmin = computed(() => authStore.isAdmin);
 </script>
 
 <template>
-  <div>
-    {{ user?.id }}
-    {{ user?.name }}
-    {{ user?.email }}
-    {{ user?.roles }}
+  <div class="text-2xl space-y-2">
+    <div>
+      <span class="font-semibold"> Imię: </span>
+      {{ user?.name }}
+    </div>
+    <div>
+      <span class="font-semibold"> Email: </span>
+      {{ user?.email }}
+    </div>
+    <div>
+      <span class="font-semibold"> Rola: </span>
+      {{ isAdmin ? "Administrator" : "Użytkownik" }}
+    </div>
   </div>
 </template>
