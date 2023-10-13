@@ -1,7 +1,9 @@
 import RegisterView from './RegisterView.vue'
-import '@/assets/main.css'
+import { createPinia } from 'pinia'
 
+describe('Register View', () => {
   it('renders', () => {
     // see: https://on.cypress.io/mounting-vue
-    cy.mount(RegisterView)
+    cy.mount(RegisterView);
   })
+})

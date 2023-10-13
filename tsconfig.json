@@ -6,6 +6,32 @@
     },
     {
       "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
     }
+  ],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "lib": [
+      "DOM",
+      "ESNext",
+      "ES2016",
+      "DOM.Iterable"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "types": [
+      "node",
+      "cypress"
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "cypress/**/*"
   ]
 }

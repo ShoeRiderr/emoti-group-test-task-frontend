@@ -19,6 +19,9 @@ export default defineConfig({
 //       }
 //     },
 // },
+optimizeDeps: {
+  include: ['esm-dep > cjs-dep'],
+},
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

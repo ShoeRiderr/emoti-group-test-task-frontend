@@ -9,8 +9,14 @@
   ],
   "compilerOptions": {
     "composite": true,
+    "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": ["node"]
+    "moduleResolution": "Node",
+    "strict": true,
+    "isolatedModules": true,
+    "types": ["node"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
   }
 }
